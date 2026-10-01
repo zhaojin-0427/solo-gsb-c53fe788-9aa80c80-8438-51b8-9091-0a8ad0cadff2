@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>光伏旁路组重接线试算台</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <header class="page-header">
+    <div>
+      <h1>光伏旁路组重接线试算台</h1>
+      <p>枚举 1～3 串接线，精确搜索全局最大功率点，并对比基线 P-V 曲线。</p>
+    </div>
+  </header>
+
+  <main class="layout">
+    <section class="card form-card">
+      <h2>1. 录入旁路组与基线</h2>
+      <label class="field">
+        <span>试算名称（可选）</span>
+        <input id="title" type="text" maxlength="80" placeholder="例如：2026 春季检修方案">
+      </label>
+
+      <div class="table-heading">
+        <h3>旁路组（3～9 个，编号唯一）</h3>
+        <div class="button-row compact">
+          <button type="button" id="addGroup" class="secondary">增加一组</button>
+          <button type="button" id="removeGroup" class="secondary">删除末组</button>
+        </div>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>编号</th>
+              <th>开路电压 Voc (V)</th>
+              <th>短路电流 Isc (A)</th>
+            </tr>
+          </thead>
+          <tbody id="groupsBody"></tbody>
+        </table>
+      </div>
+
+      <label class="field">
+        <span>基线接线：每行一串；组编号用逗号或空格分隔，1～3 个非空串，每组恰出现一次</span>
+        <textarea id="baseline" rows="4"></textarea>
+      </label>
+
+      <div class="button-row">
+        <button type="button" id="calculate">开始试算</button>
+        <button type="button" id="resetExample" class="secondary">恢复示例</button>
+      </div>
+      <p id="formMessage" class="message" role="alert"></p>
+    </section>
+
+    <section class="card records-card">
+      <h2>3. 可重开记录</h2>
+      <div class="button-row compact">
+        <button type="button" id="refreshRecords" class="secondary">刷新</button>
+      </div>
+      <div id="records" class="records-list empty">暂无保存记录</div>
+    </section>
+
+    <section class="card result-card">
+      <h2>2. 试算结果</h2>
+      <div id="emptyResult" class="empty-state">提交参数后显示峰值电压、功率和 P-V 曲线。</div>
+      <div id="resultPanel" class="result-panel" hidden>
+        <div class="summary-grid">
+          <article class="summary baseline-summary">
+            <h3>基线接线</h3>
+            <div id="baselineWiring" class="wiring"></div>
+            <dl>
+              <div><dt>峰值电压</dt><dd><strong id="baselineVoltage">-</strong> V</dd></div>
+              <div><dt>峰值电流</dt><dd><strong id="baselineCurrent">-</strong> A</dd></div>
+              <div><dt>峰值功率</dt><dd><strong id="baselinePower">-</strong> W</dd></div>
+            </dl>
+          </article>
+          <article class="summary optimal-summary">
+            <h3>最优接线</h3>
+            <div id="optimalWiring" class="wiring"></div>
+            <dl>
+              <div><dt>峰值电压</dt><dd><strong id="optimalVoltage">-</strong> V</dd></div>
+              <div><dt>峰值电流</dt><dd><strong id="optimalCurrent">-</strong> A</dd></div>
+              <div><dt>峰值功率</dt><dd><strong id="optimalPower">-</strong> W</dd></div>
+            </div>
+          </article>
+        </div>
+        <p id="comparison" class="comparison"></p>
+        <div class="chart-wrap">
+          <canvas id="pvChart" width="980" height="520" aria-label="基线与最优接线的 P-V 曲线"></canvas>
+        </div>
+        <div class="button-row">
+          <button type="button" id="saveRecord">保存当前试算</button>
+        </div>
+        <p id="resultMessage" class="message" role="alert"></p>
+      </div>
+    </section>
+  </main>
+
+  <script src="/app.js"></script>
+</body>
+</html>
